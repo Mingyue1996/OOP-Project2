@@ -1,8 +1,12 @@
 package course.oop.board;
 
+import course.oop.board.square.Square;
+
 public class  Board {
-	public String[][] basicTwoD = new String[3][3];
+	public String marker = "O";
 	public Board() {
-		basicTwoD = new String[3][3];
+		
 	}
+	
+
 }

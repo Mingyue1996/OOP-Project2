@@ -1,10 +1,11 @@
 package course.oop.controller;
 import course.oop.board.Board;
-
+import course.oop.board.BasicGameBoard;
 public class TTTControllerImpl implements TTTControllerInterface {
 	
 	private int numberPlayer = 0;
 	private int timeout = 0;
+	private BasicGameBoard gameBoard;
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
 	 * 
@@ -20,18 +21,17 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else {
 			numberPlayer = numPlayers;
 			timeout = timeoutInSecs;
-			Board board = new Board();
-			for (int i = 0; i< board.basicTwoD.length; i++) {
-				for (int j = 0; j<board.basicTwoD.length; j++) {
-					System.out.println(board.basicTwoD[i][j]);
-				}
-			}
-				
+			gameBoard = new BasicGameBoard();	
 		}
 		
 		
 	}
 	
+	
+	/**
+	 * Create a player with specified user name, marker, 
+	 * and player number (either 1 or 2) 
+	 **/
 	public void createPlayer(String username, String marker, int playerNum) {
 		
 	}
@@ -45,6 +45,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	}
 	
 	public String getGameDisplay() {
-		return "2";
+		return gameBoard.display();
 	}
 }
