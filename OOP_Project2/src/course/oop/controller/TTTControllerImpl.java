@@ -1,4 +1,5 @@
 package course.oop.controller;
+import course.oop.board.Board;
 
 public class TTTControllerImpl implements TTTControllerInterface {
 	
@@ -19,7 +20,13 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else {
 			numberPlayer = numPlayers;
 			timeout = timeoutInSecs;
-			
+			Board board = new Board();
+			for (int i = 0; i< board.basicTwoD.length; i++) {
+				for (int j = 0; j<board.basicTwoD.length; j++) {
+					System.out.println(board.basicTwoD[i][j]);
+				}
+			}
+				
 		}
 		
 		
