@@ -13,7 +13,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * 						in the given number of seconds.
 	 */
 	public void startNewGame(int numPlayers, int timeoutInSecs) {
-		if (numPlayers != 2 || numPlayers != 1) {
+		if (numPlayers != 2 && numPlayers != 1) {
 			System.out.println("The number of players is invalid.");
 		}
 		else {
