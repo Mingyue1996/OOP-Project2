@@ -11,5 +11,15 @@ public abstract class Player {
 		
 	}
 	
+	// return new row
+	public int getNewMoveRow() {
+		return newMoveRow;
+	}
+	
+	//  return new col
+	public int getNewMoveCol() {
+		return newMoveCol;
+	}
+	
 	public abstract void makeMove(int row, int col);
 }

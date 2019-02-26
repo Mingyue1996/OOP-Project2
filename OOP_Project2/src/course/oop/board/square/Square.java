@@ -27,6 +27,7 @@ public class Square {
 		isMarked = true;
 	}
 	
+	
 	// return square state
 	public boolean getIsMarked() {
 		return isMarked;

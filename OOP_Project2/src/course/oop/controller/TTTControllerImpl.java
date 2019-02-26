@@ -10,6 +10,10 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private int timeout = 0;
 	private BasicGameBoard basicGameBoard;
 	private int playerID = 1;
+	private int newMoveRow;
+	private int newMoveCol;
+	private String marker;
+	private int gameState = 0;
 	private ArrayList<HumanPlayer> player = new ArrayList<>();
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
@@ -75,8 +79,30 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * @return
 	 */
 	
-	public int determineWinner() {
-		return 1;
+	public int determineWinner() {		
+		
+		// check if there is a winner
+		if (basicGameBoard.hasWon(newMoveRow, newMoveCol, marker)) {
+			if (playerID == 1) {
+				gameState = 1;
+				return 1;
+			}
+				
+			else {
+				gameState = 2;
+				return 2;
+			}
+				
+		}
+		
+		// check if the game is in progress
+		else if (basicGameBoard.isEmptySpaceAvailable()) {
+			return 0;
+		}
+		
+		// else, there is a tie
+		gameState = 3;
+		return 3;
 	}
 	
 	public String getGameDisplay() {
@@ -87,9 +113,17 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * call makeMove() in player method and update moves
 	 * */
 	public boolean updatePlayerMove(int row, int col, int playerID) {
-		player.get(playerID-1).makeMove(row, col);
-		if (basicGameBoard.markBoard(row, col, player.get(playerID-1).getMarker())) {
-			setCurrentPlayer(playerID);
+		marker = player.get(playerID-1).getMarker();
+		if (basicGameBoard.markBoard(row, col, marker)) {
+			player.get(playerID-1).makeMove(row, col);
+			newMoveRow = row;
+			newMoveCol = col;
+			// check win
+			if (determineWinner() == 0) {
+				// if no win/tie, change turn
+				setCurrentPlayer(playerID);
+			}
+			
 			return true;
 		}
 		return false;
@@ -108,5 +142,10 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	// return playerID
 	public int getPlayerID() {
 		return playerID;
+	}
+	
+	// return game state
+	public int getGameState() {
+		return gameState;
 	}
 }
