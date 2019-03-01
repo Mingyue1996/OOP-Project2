@@ -1,12 +1,12 @@
 package course.oop.player;
 
 
-public abstract class Player {
+public class Player {
 	String username;
 	String marker;
 	int playerID;
-	int newMoveRow;
-	int newMoveCol;
+	int newMoveRow = -1;
+	int newMoveCol = -1;
 	public Player() {
 		
 	}
@@ -16,10 +16,17 @@ public abstract class Player {
 		return newMoveRow;
 	}
 	
-	//  return new col
+	//  return new column
 	public int getNewMoveCol() {
 		return newMoveCol;
 	}
 	
-	public abstract void makeMove(int row, int col);
+	public String getMarker() {
+		return marker;
+	}
+	
+	public void makeMove(int row, int col) {
+		newMoveRow = row;
+		newMoveCol = col;
+	}
 }

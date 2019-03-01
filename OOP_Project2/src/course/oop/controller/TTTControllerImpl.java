@@ -1,8 +1,8 @@
 package course.oop.controller;
-import course.oop.board.Board;
 import course.oop.board.BasicGameBoard;
-import course.oop.board.square.Square;
+import course.oop.player.ComputerPlayer;
 import course.oop.player.HumanPlayer;
+import course.oop.player.Player;
 import java.util.ArrayList;
 public class TTTControllerImpl implements TTTControllerInterface {
 	
@@ -10,11 +10,13 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private int timeout = 0;
 	private BasicGameBoard basicGameBoard;
 	private int playerID = 1;
-	private int newMoveRow;
-	private int newMoveCol;
+	private int newMoveRow = -1;
+	private int newMoveCol = -1;
 	private String marker;
 	private int gameState = 0;
-	private ArrayList<HumanPlayer> player = new ArrayList<>();
+	private boolean isReplay = false;
+	private boolean isHumanPlayer = true;
+	private ArrayList<Player> player = new ArrayList<>();
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
 	 * 
@@ -30,11 +32,24 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else {
 			numberPlayer = numPlayers;
 			timeout = timeoutInSecs;
-			basicGameBoard = new BasicGameBoard();	
+			// create a new board if this is the first time to play
+			if (!isReplay) {
+				basicGameBoard = new BasicGameBoard();	
+			}
+			// reset the board if play again
+			else {
+				basicGameBoard.reset();
+				gameState = 0;
+				playerID = 1;
+				newMoveRow = -1;
+				newMoveCol = -1;
+				isReplay = true;
+				player.clear();
+			}
+			
 		}
-		
-		
-	}
+				
+	} // end of startNewGame
 	
 	
 	/**
@@ -42,7 +57,20 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * and player number (either 1 or 2) 
 	 **/
 	public void createPlayer(String username, String marker, int playerNum) {
-		player.add(playerNum-1, new HumanPlayer(username, marker, playerNum));
+		if (playerNum == 1 || playerNum == 2) {
+			if (isHumanPlayer) {
+				// add human player
+				player.add(playerNum-1, new HumanPlayer(username, marker, playerNum));
+			} else {
+				// add computer player
+				player.add(playerNum-1, new ComputerPlayer(username, marker, playerNum));
+			}			
+			
+		}
+		else {
+			System.out.println("Invalid player number.");
+		}
+		
 	}
 	
 	/**
@@ -58,6 +86,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		if ((row == 0 || row == 1 || row == 2) && 
 			(col == 0 || col == 1 || col == 2) && 
 			(currentPlayer == 1 || currentPlayer == 2) &&
+			(currentPlayer == playerID) &&
 			(updatePlayerMove(row, col, currentPlayer))) {
 			return true;
 		}
@@ -119,6 +148,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			newMoveRow = row;
 			newMoveCol = col;
 			// check win
+			// change turn 
 			if (determineWinner() == 0) {
 				// if no win/tie, change turn
 				setCurrentPlayer(playerID);
@@ -128,7 +158,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		}
 		return false;
        
-	}
+	} // end of updatePlayerMove
 	
 	// change turn
 	public void setCurrentPlayer(int playerID) {
@@ -136,8 +166,9 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			this.playerID = 2;
 		else
 			this.playerID = 1;
-			
-	}
+		
+	} // end of change turn
+	
 	
 	// return playerID
 	public int getPlayerID() {
@@ -148,4 +179,22 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public int getGameState() {
 		return gameState;
 	}
+	
+	// set isReplay
+	public void setIsReplay(boolean isPlayAgain) {
+		isReplay = isPlayAgain;
+	}
+	
+	// return isReplay
+	public boolean getIsReplay() {
+		return isReplay;
+	}
+	
+	// return isHumanPlayer
+	public void setIsHumanPlayer(boolean isHumanPlayer) {
+		this.isHumanPlayer =  isHumanPlayer;
+	}
+
+	
+	// create a computer player: marker, AI Level, playerID == 0
 }

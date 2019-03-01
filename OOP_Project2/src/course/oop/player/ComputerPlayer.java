@@ -1,9 +1,8 @@
 package course.oop.player;
 
-
-public class HumanPlayer extends Player {
+public class ComputerPlayer extends Player {
 	
-	public HumanPlayer(String username, String marker, int playerID) {
+	public ComputerPlayer(String username, String marker, int playerID) {
 		super.username = username;
 		super.marker = marker;
 		super.playerID = playerID;

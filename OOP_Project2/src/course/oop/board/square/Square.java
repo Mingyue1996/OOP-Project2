@@ -22,9 +22,15 @@ public class Square {
 	}
 	
 	// update marker
-	public void setMarker(String marker) {
+	public void setMarker(String marker, boolean isReset) {
 		this.marker = marker;
-		isMarked = true;
+		if (isReset) {
+			isMarked = false;
+		}
+		else {
+			isMarked = true;
+		}
+		
 	}
 	
 	
