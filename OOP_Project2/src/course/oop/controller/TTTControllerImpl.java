@@ -3,19 +3,23 @@ import course.oop.board.BasicGameBoard;
 import course.oop.player.ComputerPlayer;
 import course.oop.player.HumanPlayer;
 import course.oop.player.Player;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 public class TTTControllerImpl implements TTTControllerInterface {
 	
 	private int numberPlayer = 0;
 	private int timeout = 0;
 	private BasicGameBoard basicGameBoard;
-	private int playerID = 1;
+	private int playerID = 2;
 	private int newMoveRow = -1;
 	private int newMoveCol = -1;
 	private String marker;
 	private int gameState = 0;
 	private boolean isReplay = false;
 	private boolean isHumanPlayer = true;
+	private boolean isLastMoveValid = false;
 	private ArrayList<Player> player = new ArrayList<>();
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
@@ -40,10 +44,14 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			else {
 				basicGameBoard.reset();
 				gameState = 0;
-				playerID = 1;
+				playerID = 2;
 				newMoveRow = -1;
 				newMoveCol = -1;
 				isReplay = true;
+				isHumanPlayer = true;
+				isLastMoveValid = false;
+				numberPlayer = 0;
+				timeout = 0;
 				player.clear();
 			}
 			
@@ -83,16 +91,21 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * @return
 	 */
 	public boolean setSelection(int row, int col, int currentPlayer) {
+		newMoveRow = row;
+		newMoveCol = col;
 		if ((row == 0 || row == 1 || row == 2) && 
 			(col == 0 || col == 1 || col == 2) && 
 			(currentPlayer == 1 || currentPlayer == 2) &&
-			(currentPlayer == playerID) &&
-			(updatePlayerMove(row, col, currentPlayer))) {
+			(updatePlayerMove(currentPlayer))) {
 			return true;
 		}
 			
-		else {
-			System.out.println("Invalid Move.");
+		if (!(row == 0 || row == 1 || row == 2) ||
+			!(col == 0 || col == 1 || col == 2)){
+			System.out.println("Invalid Move. Row and Column numbers should be between 0 and 2 (including). Try again.");
+		}
+		if ((currentPlayer != 1) && (currentPlayer !=2)) {
+			System.out.println("Invalid player ID.");
 		}
 		return false;
 	}
@@ -141,15 +154,33 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	/*
 	 * call makeMove() in player method and update moves
 	 * */
+	public boolean updatePlayerMove(int playerID) {
+		marker = player.get(playerID-1).getMarker();
+		if (basicGameBoard.markBoard(newMoveRow, newMoveCol, marker)) {
+			player.get(playerID-1).makeMove(newMoveRow, newMoveCol);
+			// check win
+			// change turn if the game is in progress
+			if (determineWinner() == 0) {
+				// if no win/tie, change turn
+				setCurrentPlayer(playerID);
+			}
+			
+			return true;
+		}
+		System.out.println("Invalid move. The location has been marked. Try again.");
+		return false;
+       
+	} // end of updatePlayerMove
+	
 	public boolean updatePlayerMove(int row, int col, int playerID) {
 		marker = player.get(playerID-1).getMarker();
 		if (basicGameBoard.markBoard(row, col, marker)) {
 			player.get(playerID-1).makeMove(row, col);
+			// check win
+			// change turn if the game is in progress
 			newMoveRow = row;
 			newMoveCol = col;
-			// check win
-			// change turn 
-			if (determineWinner() == 0) {
+			if (determineWinner() == 0) {			
 				// if no win/tie, change turn
 				setCurrentPlayer(playerID);
 			}
@@ -194,7 +225,55 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public void setIsHumanPlayer(boolean isHumanPlayer) {
 		this.isHumanPlayer =  isHumanPlayer;
 	}
-
 	
-	// create a computer player: marker, AI Level, playerID == 0
+	// return isLastMoveValid
+	public boolean getIsLastMoveValid () {
+		return isLastMoveValid;
+	}
+	
+	// change the value of isLastMoveValid
+	public void setIsLastMoveValid (boolean isValid) {
+		isLastMoveValid = isValid;
+	}
+	
+	// get player's row and column
+	public void getRowCol (BufferedReader in)  throws IOException {
+		// if there is an input
+		if (in.ready()) {
+			// get the input
+			String inString = in.readLine();
+			String[] inStringArray = inString.split("\\s+"); 
+			
+			// check if there are exactly two inputs
+			if (inStringArray.length == 2) {
+				
+				// check if inputs are numbers
+				try {
+					newMoveRow = Integer.parseInt(inStringArray[0]);
+					newMoveCol = Integer.parseInt(inStringArray[1]);
+					
+					// mark the board if a move is valid
+					if (setSelection(newMoveRow, newMoveCol, getPlayerID())) {
+						isLastMoveValid = true;
+					}
+					else {
+						isLastMoveValid = false;
+					}
+				}
+				catch (NumberFormatException e) { 
+					System.out.println("Invalid inputs. Please enter numbers. Try again.");
+					isLastMoveValid = false;
+				}
+				
+			}
+			else if (inStringArray.length == 1 && inStringArray[0].equalsIgnoreCase("Quit")) {
+				System.out.println("You quitted the game. Bye~");
+				System.exit(0);
+			}
+			else {
+				System.out.println("Invalid input. You need to enter two numbers: row and column. Try again.");
+				isLastMoveValid = false;
+			}
+		} // end of in.ready()
+	} // end of getRowCol
 }

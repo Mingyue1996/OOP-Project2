@@ -2,38 +2,45 @@ package course.oop.main;
 
 import course.oop.controller.TTTControllerImpl;
 import java.util.Scanner;
+
+//import javax.imageio.ImageIO;
+//
+//import java.awt.Font;
+//import java.awt.Graphics;
+//import java.awt.Graphics2D;
+//import java.awt.RenderingHints;
+//import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+//import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random; 
 
 public class  TTTDriver {
 	private static int inputToCheck;
-	private static int inputToCheck2;
 	private static String user_name;
-	private static int staticRow;
-	private static int staticCol;
-
-	public static void main(String[] args) {
+	
+	// create a tic tac toe game
+	public static void main(String[] args) throws IOException {
 		int numPlayers = 0;
 		int timeout = 0;;
-		
+		TTTControllerImpl ticTacToe = new TTTControllerImpl();
 		ArrayList<String> username = new ArrayList<>();
 		ArrayList<String> marker = new ArrayList<>();
 		String boardDemo;
-		int row = -1;
-		int col = -1;
 		int humanPlayerID = 1;
 		boolean isPlaying = true;
 		boolean isValid = false;
-		boolean isLastMoveValid = true;
 		
-		// create a tic tac toe game
-		TTTControllerImpl ticTacToe = new TTTControllerImpl();
 		// create instance of Random class 
         Random rand = new Random(); 
+        
 		System.out.println("Welcome to play Tic Tac Toe.");
 		System.out.println("Enter Quit (case insensitive) to quit the game at any time.");
 		Scanner inputs = new Scanner(System.in);  // Reading from System.in
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		
 		// start the game
 		while (isPlaying) {
@@ -45,7 +52,7 @@ public class  TTTDriver {
 			isValid = false;
 			while (!isValid) {
 				System.out.println("Enter the number of players (1 or 2): ");
-				isValid = checkInputsNumeric(inputs,1);
+				isValid = checkInputsNumeric(inputs);
 				if (isValid && inputToCheck != 1 && inputToCheck != 2) {	
 					isValid = false;
 					System.out.println("Invalid Input.");
@@ -59,7 +66,7 @@ public class  TTTDriver {
 			isValid = false;
 			while (!isValid) {	
 				System.out.println("Enter the time in seconds for each turn. Enter a negative number or zero for no timer.");
-				isValid = checkInputsNumeric(inputs, 1);
+				isValid = checkInputsNumeric(inputs);
 				if (isValid) {
 					timeout = inputToCheck;
 				}
@@ -71,7 +78,7 @@ public class  TTTDriver {
 				isValid = false;
 				while (!isValid) {
 					System.out.println("Do you want to play first? Enter 1 to play first; if you enter 2, computer will play first.");
-					isValid = checkInputsNumeric(inputs,1);
+					isValid = checkInputsNumeric(inputs);
 					if (isValid && inputToCheck != 1 && inputToCheck != 2) {	
 						isValid = false;
 						System.out.println("Invalid Input.");
@@ -264,28 +271,55 @@ public class  TTTDriver {
 			}
 			System.out.println(boardDemo);
 			
+			System.out.println("\nCurrent Board:\n");
+			System.out.println(ticTacToe.getGameDisplay());	
+			
+			
 			// user enters location of the marker
 			while (ticTacToe.getGameState() == 0) {	
-				if (isLastMoveValid) {
+				if (ticTacToe.getIsLastMoveValid()) {
 					System.out.println("\nCurrent Board:\n");
 					System.out.println(ticTacToe.getGameDisplay());	
 				}
+				else {
+					ticTacToe.setCurrentPlayer(ticTacToe.getPlayerID());
+				}
+				ticTacToe.setIsLastMoveValid (false);
 								
 				// ask human player inputs
-				if (numPlayers == 2 || (numPlayers == 1 && humanPlayerID == ticTacToe.getPlayerID())){
-					// check if the input (row & column) is a number
+				if (numPlayers == 2 || (numPlayers == 1 && humanPlayerID == ticTacToe.getPlayerID())) {
+					
+					// get current user name
 					user_name = username.get(ticTacToe.getPlayerID()-1);
-					getRowCol(inputs);
-					row = staticRow;
-					col = staticCol;
-					// mark the board if a move is valid
-					if (ticTacToe.setSelection(row, col, ticTacToe.getPlayerID())) {
-						isLastMoveValid = true;
-					}
+					
+					// record current time
+					long startTime = System.currentTimeMillis();
+					System.out.println(user_name + ", " + "enter the row and column (separated by white space; enter the row first) of your next move.");
+					
+					// when the game has a timer
+					if (timeout > 0) {
+						while (!ticTacToe.getIsLastMoveValid() && (System.currentTimeMillis() - startTime) < timeout * 1000) 
+		        		{
+							ticTacToe.getRowCol(in);
+						
+		        		} // end of timer loop
+						
+					} // end of if timeout > 0
+					
+					// no timer
 					else {
-						isLastMoveValid = false;
+						while (!ticTacToe.getIsLastMoveValid()) 
+		        		{
+							ticTacToe.getRowCol(in);
+						
+		        		} // end of timer loop
 					}
-				}
+					
+					if (!ticTacToe.getIsLastMoveValid()) {
+						System.out.println("Time is up. You cannot make move for now.");
+					}
+					
+				} // end of if human player is playing
 				// computer player generates a valid random move
 				else {
 					user_name = username.get(ticTacToe.getPlayerID()-1);
@@ -296,7 +330,7 @@ public class  TTTDriver {
 						computerRow = rand.nextInt(3); 
 						computerCol = rand.nextInt(3);
 					}
-					isLastMoveValid = true;
+					ticTacToe.setIsLastMoveValid(true);
 					System.out.println("\nComputer generated a move with row " + computerRow + " and column " + computerCol + ".");
 				}			
 				
@@ -316,7 +350,7 @@ public class  TTTDriver {
 	    // ask user(s) to play again or quit
 		while (!isValid) {			
 			System.out.println("Enter 1 to Play Again. Enter Quit to exit the game.");	
-			isValid = checkInputsNumeric(inputs, 1);
+			isValid = checkInputsNumeric(inputs);
 			if (isValid && inputToCheck != 1) {
 				isValid = false;
 				System.out.println("Invalid Input.");
@@ -332,15 +366,13 @@ public class  TTTDriver {
 	} // end of main method
 	
 	// check the validity of inputs
-	public static boolean checkInputsNumeric(Scanner userInputs, int numInputs) {
+	public static boolean checkInputsNumeric(Scanner userInputs) {
 		try {
 			String extraString;
+			// get input
 			inputToCheck = userInputs.nextInt();
-			if (numInputs == 2) {
-				inputToCheck2 = userInputs.nextInt();
-			}
 			extraString = userInputs.nextLine();
-			// valid input
+			// input is a number
 			if (extraString.trim().isEmpty()) {
 				return true;
 			}
@@ -363,18 +395,5 @@ public class  TTTDriver {
 		} // end of catch			
 	} // end of checkValidity
 	
-	// ask player's row and column
-	public static void getRowCol (Scanner inputs) {
-		boolean isNumeric = false;
-		while (!isNumeric) {	
-			System.out.println(user_name + ", " + "enter the row and column (separated by white space; enter the row first) of your next move.");
-			isNumeric = checkInputsNumeric(inputs, 2);
-			if (isNumeric) {
-				staticRow = inputToCheck;
-				staticCol = inputToCheck2;
-			}
-		} // end of while (check if move is a number)
-		
-	}
 	
 } // end of TTTDriver class
