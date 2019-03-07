@@ -3,15 +3,13 @@ package course.oop.main;
 import course.oop.controller.TTTControllerImpl;
 import java.util.Scanner;
 
-//import javax.imageio.ImageIO;
-//
-//import java.awt.Font;
-//import java.awt.Graphics;
-//import java.awt.Graphics2D;
-//import java.awt.RenderingHints;
-//import java.awt.image.BufferedImage;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
 import java.io.BufferedReader;
-//import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -33,6 +31,39 @@ public class  TTTDriver {
 		int humanPlayerID = 1;
 		boolean isPlaying = true;
 		boolean isValid = false;
+		final int ZEROVALUE = -16777216;
+		final int WIDTH = 120;
+		final int HEIGHT = 20;
+		
+		// print out Tic Tac Toe (ASCII arts)
+		// create an instance of Graphics2D and set the image type to integer mode
+		BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		Graphics graphics = bufferedImage.getGraphics();
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, 24));
+		
+		// generate ASCII art
+		Graphics2D graphics2D = (Graphics2D) graphics;
+		graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		graphics2D.drawString("Tic Tac Toe", 2, 20);
+
+		// print out ASCII art
+		for (int height = 0; height < HEIGHT; height++) {
+		    StringBuilder stringBuilder  = new StringBuilder();
+		    for (int width = 0; width < WIDTH; width++)
+		    	if (bufferedImage.getRGB(width, height) == ZEROVALUE) {
+		    		stringBuilder.append(" ");
+		    	}
+		    	else {
+		    		stringBuilder.append("*");
+		    	}
+		    
+		    	// print out strings only
+			    if (stringBuilder.toString().trim().isEmpty()) {
+			    	continue;
+			    }
+			    System.out.println(stringBuilder);
+		} // end of for loop
+		
 		
 		// create instance of Random class 
         Random rand = new Random(); 
