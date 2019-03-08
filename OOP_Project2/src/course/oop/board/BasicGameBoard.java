@@ -30,18 +30,42 @@ public class BasicGameBoard {
 	
 	// display
 	public String display() {
-		String board_display = "|";
-		for (int i = 0; i < 3; i ++) {
-			for (int j = 0; j < 3; j++) {
-				board_display += String.format("%-5s", basicTwoD[i][j].display());	
-				board_display += "|";
+		String boardDisplay = "";
+		for (int num = 0; num <40; num++) {
+			if (num % 13 == 0) {
+				boardDisplay += String.format("+");
 			}
-			if (i+1 <3)
-				board_display += "\n|";
-			else
-				board_display += "\n";
+			else {
+				boardDisplay += String.format("=");
+			}
+			
 		}
-		return board_display;
+		boardDisplay += String.format("\n");	
+		boardDisplay += "|";
+			for (int i = 0; i < 3; i ++) {
+				for (int j = 0; j < 3; j++) {
+					
+					boardDisplay += String.format("%-12s", basicTwoD[i][j].display());	
+					boardDisplay += "|";
+				}
+				boardDisplay += String.format("\n");
+				for (int num = 0; num <40; num++) {
+					if (num % 13 == 0) {
+						boardDisplay += String.format("+");
+					}
+					else {
+						boardDisplay += String.format("=");
+					}
+					
+				}
+				//boardDisplay += String.format("\n");
+				
+				if (i+1 <3)
+					boardDisplay += "\n|";
+				else
+					boardDisplay += "\n";
+			}
+			return boardDisplay;
 	}
 	
 	// mark the board

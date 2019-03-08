@@ -3,6 +3,8 @@ package course.oop.main;
 import course.oop.controller.TTTControllerImpl;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,6 +12,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -68,8 +71,54 @@ public class  TTTDriver {
 		// create instance of Random class 
         Random rand = new Random(); 
         
-		System.out.println("Welcome to play Tic Tac Toe.");
+		System.out.println("\nWelcome to play Tic Tac Toe.");
 		System.out.println("Enter Quit (case insensitive) to quit the game at any time.");
+		System.out.println("\n================================================================================");
+		System.out.println("\nAt the end of the game, you will see an emoji based on game results:");
+		System.out.println("You will see an expressionless face when there is a tie.");
+		System.out.println("You will see a smiley face when a human player won the game (no matter which human player).");
+		System.out.println("You will see an unhappy face when a human player plays against a computer and the human player lost.");
+		
+		System.out.println("\n================================================================================");
+		System.out.println("\nEnter the corresponding row and column number as shown below to mark the board.");
+		boardDemo = "";
+		for (int num = 0; num <49; num++) {
+			if (num % 16 == 0) {
+				boardDemo += String.format("+");
+			}
+			else {
+				boardDemo += String.format("=");
+			}
+			
+		}
+		boardDemo += String.format("\n");	
+		boardDemo += "|";
+			for (int i = 0; i < 3; i ++) {
+				for (int j = 0; j < 3; j++) {
+					
+					boardDemo += String.format("%-5s", "  " + "row "+ i + " " + "col " + j + "  " );	
+					boardDemo += "|";
+				}
+				boardDemo += String.format("\n");
+				for (int num = 0; num <49; num++) {
+					if (num % 16 == 0) {
+						boardDemo += String.format("+");
+					}
+					else {
+						boardDemo += String.format("=");
+					}
+					
+				}
+				//boardDemo += String.format("\n");
+				
+				if (i+1 <3)
+					boardDemo += "\n|";
+				else
+					boardDemo += "\n";
+			}
+			
+			System.out.println(boardDemo);
+		
 		Scanner inputs = new Scanner(System.in);  // Reading from System.in
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -82,7 +131,7 @@ public class  TTTDriver {
 			// get number of players
 			isValid = false;
 			while (!isValid) {
-				System.out.println("Enter the number of players (1 or 2): ");
+				System.out.println("\nEnter the number of players (1 or 2): ");
 				isValid = checkInputsNumeric(inputs);
 				if (isValid && inputToCheck != 1 && inputToCheck != 2) {	
 					isValid = false;
@@ -166,7 +215,7 @@ public class  TTTDriver {
 						System.exit(0);
 					}
 					if (username2.equals(username.get(0))) {
-						System.out.println("Invalid. Player 2's  user name is the same as Player 1.");
+						System.out.println("Invalid. Player 2's user name is the same as Player 1.");
 					}
 					else if (username2.trim().isEmpty()) {
 						System.out.println("You cannot enter an empty user name.");
@@ -288,20 +337,7 @@ public class  TTTDriver {
 			}
 			
 			// start game
-			System.out.println(username.get(0) + " will start first.\nEnter the corresponding row and column number as shown below to mark the board.");
-			boardDemo = "|";
-			for (int i = 0; i < 3; i ++) {
-				for (int j = 0; j < 3; j++) {
-					boardDemo += String.format("%-5s", "  " + "row "+ i + " " + "col " + j + "  " );	
-					boardDemo += "|";
-				}
-				if (i+1 <3)
-					boardDemo += "\n|";
-				else
-					boardDemo += "\n";
-			}
-			System.out.println(boardDemo);
-			
+			System.out.println(username.get(0) + " will start first.");
 			System.out.println("\nCurrent Board:\n");
 			System.out.println(ticTacToe.getGameDisplay());	
 			
@@ -372,9 +408,20 @@ public class  TTTDriver {
 			// print out results
 			if (ticTacToe.getGameState() == 3) {
 				System.out.println("No winner. There is a tie.");
+				createAsciiPicture("tie_face.jpg");
 			}
 			else {
 				System.out.println(user_name + " won the game.");	
+				
+				// print out a smiley face when two players play and one of them won
+				if (numPlayers == 2 || (numPlayers == 1 && username.indexOf(user_name) == humanPlayerID - 1)) {
+					createAsciiPicture("smiley_face.jpg");
+				}
+				
+				// print out an unhappy face when the human player lost (in human vs. computer)
+				if (numPlayers == 1 && username.indexOf(user_name) != humanPlayerID - 1) {
+					createAsciiPicture("cry_face.jpg");
+				}
 			}
 					
 		isValid = false;
@@ -425,6 +472,50 @@ public class  TTTDriver {
 			return false;
 		} // end of catch			
 	} // end of checkValidity
+	
+	
+	// create an ASCII picture
+	public static void createAsciiPicture(final String FILE_PATH) {
+		String characters = "#####";
+		int pixel;
+		int red, green, blue;
+		float color;
+		int colorIndex;
+		
+		try {
+			// read image
+			BufferedImage image = ImageIO.read(new File(FILE_PATH));
+			
+			for (int height = 0; height < image.getHeight(); height +=2) {
+				for (int width = 0; width < image.getWidth(); width++) {
+					// get pixel in the specific width and height
+					pixel = image.getRGB(width, height);
+					
+					// get red, green, blue
+					red = (pixel & 0xff0000) >> 16;
+					green = (pixel & 0xff00) >> 8; 
+					blue = pixel & 0xff;
+					
+					// get color
+					color =  red * 0.2f  + green * 0.5f + blue * 0.3f;
+					colorIndex = Math.round((characters.length() + 1) * color / 255);
+					// print out proper characters
+					if (colorIndex < characters.length()) {
+						System.out.print("#");
+					}
+					else {
+						System.out.print(" ");
+					}
+					
+				} // end of inner for
+				System.out.println();
+			} // end of outer for
+		} catch (IOException e) {
+			// image file is not found
+			e.printStackTrace();
+			System.out.println("Image file not found, but this does not affect the game. Keep going.");
+		} // end of catch
+	} // end of createAsciiPicture
 	
 	
 } // end of TTTDriver class
