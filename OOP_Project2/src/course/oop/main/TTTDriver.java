@@ -192,6 +192,7 @@ public class  TTTDriver {
 					}
 					else if (username1.equalsIgnoreCase("Quit")) {
 						System.out.println("You quitted the game. Bye~");
+						createAsciiPicture("Bye.jpg");
 						System.exit(0);
 					}
 					else {
@@ -218,6 +219,7 @@ public class  TTTDriver {
 						username2 = inputs.nextLine();
 						if (username2.equalsIgnoreCase("Quit")) {
 							System.out.println("You quitted the game. Bye~");
+							createAsciiPicture("Bye.jpg");
 							System.exit(0);
 						}
 						if (username2.equals(username.get(0))) {
@@ -254,6 +256,7 @@ public class  TTTDriver {
 					}
 					else if (marker1.equalsIgnoreCase("Quit")) {
 						System.out.println("You quitted the game. Bye~");
+						createAsciiPicture("Bye.jpg");
 						System.exit(0);
 					}
 					// valid marker, store marker
@@ -286,6 +289,7 @@ public class  TTTDriver {
 						marker2 = inputs.nextLine();
 						if (marker2.equalsIgnoreCase("Quit")) {
 							System.out.println("You quitted the game. Bye~");
+							createAsciiPicture("Bye.jpg");
 							System.exit(0);
 						}
 						if (marker2.equals(marker.get(0))) {
@@ -475,6 +479,7 @@ public class  TTTDriver {
 			// quit the game
 			if (input.equalsIgnoreCase("Quit")) {
 				System.out.println("You quitted the game. Bye~");
+				createAsciiPicture("Bye.jpg");
 				System.exit(0);
 			}
 			System.out.println("Invalid input.");
@@ -521,7 +526,7 @@ public class  TTTDriver {
 			} // end of outer for
 		} catch (IOException e) {
 			// image file is not found
-			System.out.println("You were supposed to see an emoji, but the image file is not found, so the emoji cannot show."
+			System.out.println("You were supposed to see an image, but the image file is not found, so the image cannot show."
 			+ "\n However, this does not affect the game. Keep going.");
 		} // end of catch
 	} // end of createAsciiPicture
