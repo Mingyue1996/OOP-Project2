@@ -79,6 +79,10 @@ public class  TTTDriver {
 			System.out.println("You will see a smiley face when a human player won the game (no matter which human player).");
 			System.out.println("You will see an unhappy face when a human player plays against a computer and the human player lost.");
 			
+			System.out.println("\nWhen a human player plays against a computer, the result would only show whether the human player won or not.");
+			System.out.println("For example, when a human player with user name Computer won the game, the result would show "
+			+ "Computer won the game. This means the human player won the game, not the aritificial intelligence.");
+			
 			System.out.println("\n================================================================================");
 			System.out.println("\nEnter the corresponding row and column number as shown below to mark the board.");
 			boardDemo = "";
@@ -175,7 +179,8 @@ public class  TTTDriver {
 				String username1;
 				while (true) {
 					if (numPlayers == 2) {
-						System.out.println("Player 1 will start first. \nEnter player 1's user name. If you enter Quit (case insensitive), you would exit the game.");
+						System.out.println("Player 1 will start first. \nEnter player 1's user name. If you enter Quit (case insensitive), "
+						+ "you would exit the game.");
 					}
 					else {
 						System.out.println("Enter your user name. If you enter Quit (case insensitive), you would exit the game.");
@@ -208,7 +213,8 @@ public class  TTTDriver {
 				if (numPlayers == 2) {
 					String username2;
 					while (true) {
-						System.out.println("Enter player 2's user name. You cannot have the same user name as Player 1. If you enter Quit (case insensitive), you would exit the game.");	
+						System.out.println("Enter player 2's user name. You cannot have the same user name as Player 1. If you enter Quit" + 
+						" (case insensitive), you would exit the game.");	
 						username2 = inputs.nextLine();
 						if (username2.equalsIgnoreCase("Quit")) {
 							System.out.println("You quitted the game. Bye~");
@@ -275,7 +281,8 @@ public class  TTTDriver {
 				if (numPlayers == 2) {
 					String marker2;
 					while (true ) {
-						System.out.println("Enter player 2's  marker. You cannot have the same marker as Player 1. If you enter Quit, you would exit the game.");	
+						System.out.println("Enter player 2's  marker. You cannot have the same marker as Player 1. If you enter Quit, "
+						+ "you would exit the game.");	
 						marker2 = inputs.nextLine();
 						if (marker2.equalsIgnoreCase("Quit")) {
 							System.out.println("You quitted the game. Bye~");
@@ -361,7 +368,8 @@ public class  TTTDriver {
 						
 						// record current time
 						long startTime = System.currentTimeMillis();
-						System.out.println(user_name + ", " + "enter the row and column (separated by white space; enter the row first) of your next move.");
+						System.out.println(user_name + ", " + "enter the row and column (separated by white space; enter the row first) of"
+						+ " your next move.");
 						
 						// when the game has a timer
 						if (timeout > 0) {
@@ -411,15 +419,16 @@ public class  TTTDriver {
 					createAsciiPicture("tie_face.jpg");
 				}
 				else {
-					System.out.println(user_name + " won the game.");	
-					
+											
 					// print out a smiley face when two players play and one of them won
 					if (numPlayers == 2 || (numPlayers == 1 && username.indexOf(user_name) == humanPlayerID - 1)) {
-						createAsciiPicture("smiley_face.jpg");
+						System.out.println(user_name + " won the game.");
+						createAsciiPicture("smiley_face.jpg");					
 					}
 					
 					// print out an unhappy face when the human player lost (in human vs. computer)
 					if (numPlayers == 1 && username.indexOf(user_name) != humanPlayerID - 1) {
+						System.out.println(username.get(humanPlayerID - 1) + " lost the game.");
 						createAsciiPicture("cry_face.jpg");
 					}
 				}
@@ -512,8 +521,8 @@ public class  TTTDriver {
 			} // end of outer for
 		} catch (IOException e) {
 			// image file is not found
-			e.printStackTrace();
-			System.out.println("Image file not found, but this does not affect the game. Keep going.");
+			System.out.println("You were supposed to see an emoji, but the image file is not found, so the emoji cannot show."
+			+ "\n However, this does not affect the game. Keep going.");
 		} // end of catch
 	} // end of createAsciiPicture
 	
