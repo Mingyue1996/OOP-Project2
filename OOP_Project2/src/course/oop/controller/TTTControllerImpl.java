@@ -240,8 +240,8 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public void getRowCol (BufferedReader in)  throws IOException {
 		// if there is an input
 		if (in.ready()) {
-			// get the input
-			String inString = in.readLine();
+			// get the input and remove leading and trailing white spaces
+			String inString = (in.readLine()).trim();
 			String[] inStringArray = inString.split("\\s+"); 
 			
 			// check if there are exactly two inputs
