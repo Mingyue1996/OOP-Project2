@@ -12,14 +12,14 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private int numberPlayer = 0;
 	private int timeout = 0;
 	private BasicGameBoard basicGameBoard;
-	private int playerID = 2;
+	private int playerID = 1;
 	private int newMoveRow = -1;
 	private int newMoveCol = -1;
 	private String marker;
 	private int gameState = 0;
 	private boolean isReplay = false;
 	private boolean isHumanPlayer = true;
-	private boolean isLastMoveValid = false;
+	private boolean isLastMoveValid = true;
 	private ArrayList<Player> player = new ArrayList<>();
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
@@ -44,12 +44,12 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			else {
 				basicGameBoard.reset();
 				gameState = 0;
-				playerID = 2;
+				playerID = 1;
 				newMoveRow = -1;
 				newMoveCol = -1;
 				isReplay = true;
 				isHumanPlayer = true;
-				isLastMoveValid = false;
+				isLastMoveValid = true;
 				numberPlayer = 0;
 				timeout = 0;
 				player.clear();
@@ -69,9 +69,11 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			if (isHumanPlayer) {
 				// add human player
 				player.add(playerNum-1, new HumanPlayer(username, marker, playerNum));
+				basicGameBoard.setMarker(marker, playerNum);
 			} else {
 				// add computer player
 				player.add(playerNum-1, new ComputerPlayer(username, marker, playerNum));
+				basicGameBoard.setMarker(marker, playerNum);
 			}			
 			
 		}

@@ -349,8 +349,6 @@ public class  TTTDriver {
 				
 				// start game
 				System.out.println(username.get(0) + " will start first.");
-				System.out.println("\nCurrent Board:\n");
-				System.out.println(ticTacToe.getGameDisplay());	
 				
 				
 				// user enters location of the marker

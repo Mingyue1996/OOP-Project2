@@ -5,7 +5,8 @@ import course.oop.board.square.Square;
 public class BasicGameBoard {
 	private boolean hasWon = true;
 	private Square[][] basicTwoD = new Square[3][3];
-	
+	private String marker1, marker2;
+	private int boardFormat = 0;
 	// constructor
 	public BasicGameBoard() {
 		int id = 0;
@@ -31,8 +32,8 @@ public class BasicGameBoard {
 	// display
 	public String display() {
 		String boardDisplay = "";
-		for (int num = 0; num <40; num++) {
-			if (num % 13 == 0) {
+		for (int num = 0; num <boardFormat * 3 + 4; num++) {
+			if (num % (boardFormat + 1) == 0) {
 				boardDisplay += String.format("+");
 			}
 			else {
@@ -45,12 +46,12 @@ public class BasicGameBoard {
 			for (int i = 0; i < 3; i ++) {
 				for (int j = 0; j < 3; j++) {
 					
-					boardDisplay += String.format("%-12s", basicTwoD[i][j].display());	
+					boardDisplay += String.format("%-" + boardFormat + "s", basicTwoD[i][j].display());	
 					boardDisplay += "|";
 				}
 				boardDisplay += String.format("\n");
-				for (int num = 0; num <40; num++) {
-					if (num % 13 == 0) {
+				for (int num = 0; num < boardFormat * 3 + 4; num++) {
+					if (num % (boardFormat + 1) == 0) {
 						boardDisplay += String.format("+");
 					}
 					else {
@@ -136,6 +137,24 @@ public class BasicGameBoard {
 		    
 	        return hasWon;
 	} // end of hasWon
+	
+	// set marker
+	public void setMarker (String marker, int id) {
+		if (id == 1) {
+			marker1 = marker;
+		}
+		else {
+			marker2 = marker;
+			
+			// compare which marker contains more characters
+			if (marker1.length() >= marker2.length()) {
+				boardFormat = 2 + marker1.length();
+			}
+			else {
+				boardFormat = 2 + marker2.length();
+			}
+		}
+	} // end of setMarker
 	
 
 }
