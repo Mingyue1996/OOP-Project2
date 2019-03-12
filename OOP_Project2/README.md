@@ -19,3 +19,16 @@ A player can enter as many invalid moves as they want within the time limit.
 Players can quit the game at any time by entering Quit (case insensitive. Players can restart a new game after they finish the current game.
 
 I have several image files in this program. Don't move their locations. They are for UI extra credits.
+
+Put image files inside the outermost folder. For example, if you have the following folder structure, the jpg files should be put in Project 2 folder (not in src folder):
+
+Project 2
+  src
+    course.oop.main
+Image_file.jpg
+
+Or, if you do not have Project 2 folder, you just need to put image files inside src:
+
+src
+  course.oop.main
+Image_file.jpg
