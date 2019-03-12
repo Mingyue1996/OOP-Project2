@@ -17,3 +17,5 @@ When the time is limit, the turn would switch when the current player makes a va
 A player can enter as many invalid moves as they want within the time limit.
 
 Players can quit the game at any time by entering Quit (case insensitive. Players can restart a new game after they finish the current game.
+
+I have several image files in this program. Don't move their locations. They are for UI extra credits.
