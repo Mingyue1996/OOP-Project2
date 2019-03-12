@@ -37,11 +37,11 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			numberPlayer = numPlayers;
 			timeout = timeoutInSecs;
 			// create a new board if this is the first time to play
-			if (!isReplay) {
+			if (!isReplay && basicGameBoard == null) {
 				basicGameBoard = new BasicGameBoard();	
 			}
 			// reset the board if play again
-			else {
+			else if (isReplay) {
 				basicGameBoard.reset();
 				gameState = 0;
 				playerID = 1;
@@ -69,7 +69,11 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			if (isHumanPlayer) {
 				// add human player
 				player.add(playerNum-1, new HumanPlayer(username, marker, playerNum));
+				if (basicGameBoard == null) {
+					basicGameBoard = new BasicGameBoard();	
+				}
 				basicGameBoard.setMarker(marker, playerNum);
+				
 			} else {
 				// add computer player
 				player.add(playerNum-1, new ComputerPlayer(username, marker, playerNum));
